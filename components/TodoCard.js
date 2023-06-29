@@ -12,8 +12,7 @@ export default function TodoCard(props) {
     handleEditTodo,
     handleDelete,
   } = props;
-  const { title, date, description, status } = children;
-
+  const { id, title, date, description, status } = todoKey;
   const handleStatusChange = (e) => {
     const isChecked = e.target.checked;
     if (isChecked) {
@@ -31,7 +30,7 @@ export default function TodoCard(props) {
   return (
     <div className="p-2 relative sm:p-3 border flex items-stretch border-white border-solid">
       <div className="flex-1 flex">
-        {!(edit === todoKey) ? (
+        {!(edit === id) ? (
           <>
             <p
               className="flex items-center"
@@ -139,7 +138,7 @@ export default function TodoCard(props) {
         )}
       </div>
       <div className="flex items-center">
-        {edit === todoKey ? (
+        {edit === id ? (
           <>
             <i
               onClick={handleEditTodo}
@@ -153,11 +152,11 @@ export default function TodoCard(props) {
         ) : (
           <>
             <i
-              onClick={handleAddEdit(todoKey)}
+              onClick={handleAddEdit(id)}
               className="fa-solid fa-pencil px-2 duration-300 hover:rotate-45 cursor-pointer"
             ></i>
             <i
-              onClick={handleDelete(todoKey)}
+              onClick={handleDelete(id)}
               className="fa-solid fa-trash-can px-2 duration-300 hover:scale-125 cursor-pointer"
             ></i>
           </>

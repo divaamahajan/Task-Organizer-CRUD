@@ -19,15 +19,18 @@ export default function Login() {
   }, [isLoggingIn]);
 
   async function guestLoginHandler() {
-    setEmail("guest@test.com");
-    setPassword("123456");
-    submitHandler();
+    try {
+      await login("guest@test.com", "123456");
+    } catch (err) {
+      setError("Incorrect email or password");
+      console.log("guest email or password");
+    }
   }
 
   async function submitHandler() {
     const currentEmail = email;
     const currentPassword = password;
-    const currentFullName = fullName
+    const currentFullName = fullName;
 
     if (!currentEmail || !currentPassword) {
       setError("Please enter email and password");
@@ -79,12 +82,12 @@ export default function Login() {
       )}
       {isLoggingIn ? null : (
         <input
-        type="text"
-        value={fullName}
-        onChange={(e) => setFullName(e.target.value)}
-        placeholder="Full Name"
-        className="outline-none duration-300 border-b-2 border-solid border-white focus:border-cyan-300 text-slate-900 p-2 w-full max-w-[40ch]"
-      />
+          type="text"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          placeholder="Full Name"
+          className="outline-none duration-300 border-b-2 border-solid border-white focus:border-cyan-300 text-slate-900 p-2 w-full max-w-[40ch]"
+        />
       )}
       <input
         type="text"

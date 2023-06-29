@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import useFetchTodos from "../hooks/fetchTodos";
 
 export default function TaskFilter({ tasks, setTodos }) {
-  const [statusFilter, setStatusFilter] = useState("");
   const [searchText, setSearchText] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");

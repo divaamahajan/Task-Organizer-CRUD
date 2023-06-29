@@ -6,6 +6,7 @@ import { db } from "../firebase";
 import useFetchTodos from "../hooks/fetchTodos";
 import TodoInput from "./TodoInput";
 import TaskFilter from "./TaskFilter";
+import SortTodos from "./SortTodos";
 
 export default function UserDashboard() {
   const { userInfo, currentUser } = useAuth();
@@ -15,8 +16,9 @@ export default function UserDashboard() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [edittedValue, setEdittedValue] = useState("");
+  const [todosArray, setTodosArray] = useState([]);
+  const [todoList, setTodosList] = useState([]);
   const { todos, setTodos, loading, error } = useFetchTodos();
-
   console.log("currentUser", currentUser);
 
   useEffect(() => {
@@ -28,9 +30,16 @@ export default function UserDashboard() {
         }
         return task;
       });
-      console.log("modifiedTodos", modifiedTodos);
+      console.log("modifiedTodos object", modifiedTodos);
 
       setTodo(modifiedTodos);
+
+      const todoList = Object.entries(modifiedTodos).map(([key, value]) => ({
+        id: key,
+        ...value,
+      }));
+      console.log("todoList inside loading", todoList);
+      setTodosList(todoList);
     }
   }, [loading]);
 
@@ -126,6 +135,19 @@ export default function UserDashboard() {
       );
     };
   }
+  useEffect(() => {
+    console.log("todos updated")
+    if (todos) {
+      const todoList = Object.entries(todos).map(([key, value]) => ({
+        id: key,
+        ...value,
+      }));
+      setTodosList(todoList);
+    }
+  }, [todos]);
+  
+  console.log("todoList", todoList);
+
   return (
     <div className="w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-col flex-1 gap-3 sm:gap-5">
       <TodoInput
@@ -138,6 +160,7 @@ export default function UserDashboard() {
         handleAddTodo={handleAddTodo}
       />
       <TaskFilter tasks={todos} setTodos={setTodos} />
+      <SortTodos tasks={todos} setSortedTodo={setTodosList} />
       {loading && (
         <div className="flex-1 grid place-items-center">
           <i className="fa-solid fa-spinner animate-spin text-6xl"></i>
@@ -145,23 +168,21 @@ export default function UserDashboard() {
       )}
       {!loading && (
         <>
-          {Object.keys(todos).map((todo, i) => {
-            return (
-              <TodoCard
-                handleEditTodo={handleEditTodo}
-                key={i}
-                handleAddEdit={handleAddEdit}
-                edit={edit}
-                setEdit={setEdit}
-                todoKey={todo}
-                edittedValue={edittedValue}
-                setEdittedValue={setEdittedValue}
-                handleDelete={handleDelete}
-              >
-                {todos[todo]}
-              </TodoCard>
-            );
-          })}
+          {todoList.map((todo, i) => (
+            <TodoCard
+              handleEditTodo={handleEditTodo}
+              key={i}
+              handleAddEdit={handleAddEdit}
+              edit={edit}
+              setEdit={setEdit}
+              todoKey={todo}
+              edittedValue={edittedValue}
+              setEdittedValue={setEdittedValue}
+              handleDelete={handleDelete}
+            >
+              {todos[todo]}
+            </TodoCard>
+          ))}
         </>
       )}
       {/* {!addTodo && <button onClick={() => setAddTodo(true)} className='text-cyan-300 border border-solid border-cyan-300 py-2 text-center uppercase text-lg duration-300 hover:opacity-30'>ADD TODO</button>} */}

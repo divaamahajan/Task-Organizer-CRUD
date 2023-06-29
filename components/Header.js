@@ -6,7 +6,7 @@ export default function Header() {
   const [openModal, setOpenModal] = useState(false);
   const { logout, currentUser } = useAuth();
   let user = "User";
-  if (currentUser.displayName) {
+  if (currentUser && currentUser.displayName) {
     user = currentUser.displayName;
   }
   return (
