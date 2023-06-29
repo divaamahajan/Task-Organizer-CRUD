@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useFetchTodos from "../hooks/fetchTodos";
 
-const StatusFilter = ({ setTodos }) => {
+const StatusFilter = ({ reset, setReset, setTodos }) => {
   const { todos } = useFetchTodos();
+
+  // useEffect(() => {
+  //   if (reset) {
+  //     setTodos(todos);
+  //   }
+  // }, [reset]);
+
   const statusCount = todos
     ? Object.values(todos).reduce((count, task) => {
         count[task.status] = (count[task.status] || 0) + 1;
@@ -29,46 +36,47 @@ const StatusFilter = ({ setTodos }) => {
       )
     );
     setTodos(filteredTodos);
+    setReset(false);
   };
 
+  const buttonClassName =
+    "w-fit px-4 sm:px-12 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md";
+  const fontSizeTaskCount = "0.8em";
   return (
     <div
-      className="flex  items-stretch items-center space-x-2 mb-4 justify-between"
+      className="flex items-stretch items-center space-x-2 mb-4 justify-between"
       style={{ marginBottom: "-0.5rem" }}
     >
       <button
         onClick={() => handleStatusFilter("pending")}
         style={{ backgroundColor: getStatusColor("pending") }}
-        // className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
-        className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
+        className={buttonClassName}
       >
         Pending
         <br />{" "}
-        <span style={{ fontSize: "0.8em" }}>
+        <span style={{ fontSize: fontSizeTaskCount }}>
           {statusCount["pending"]} tasks
         </span>
       </button>
       <button
         onClick={() => handleStatusFilter("in progress")}
         style={{ backgroundColor: getStatusColor("in progress") }}
-        // className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
-        className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
+        className={buttonClassName}
       >
         In Progress
         <br />{" "}
-        <span style={{ fontSize: "0.8em" }}>
+        <span style={{ fontSize: fontSizeTaskCount }}>
           {statusCount["in progress"]} tasks
         </span>
       </button>
       <button
         onClick={() => handleStatusFilter("completed")}
         style={{ backgroundColor: getStatusColor("completed") }}
-        className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
-        // className="w-fit text-white font-medium px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
+        className={buttonClassName}
       >
         Completed
         <br />{" "}
-        <span style={{ fontSize: "0.8em" }}>
+        <span style={{ fontSize: fontSizeTaskCount }}>
           {statusCount["completed"]} tasks
         </span>
       </button>

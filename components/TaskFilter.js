@@ -1,22 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useFetchTodos from "../hooks/fetchTodos";
 
-export default function TaskFilter({ tasks, setTodos }) {
+export default function TaskFilter({ reset, setReset, setTodos }) {
   const [searchText, setSearchText] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const { todos } = useFetchTodos();
 
+  useEffect(() => {
+    if (reset) {
+      setSearchText("")
+      setEndDate("")
+      setStartDate("")
+      // setTodos(todos);
+    }
+  }, [reset]);
   const handleSearchTextChange = (e) => {
     setSearchText(e.target.value);
+    setReset(false)
   };
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
+    setReset(false)
   };
 
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
+    setReset(false)
   };
 
   const filterTasks = () => {
@@ -59,23 +70,20 @@ export default function TaskFilter({ tasks, setTodos }) {
     }
 
     setTodos(filteredTodos);
+    setReset(false)
   };
 
-  const resetHandler = () => {
-    setTodos(todos); // Reset todos to the original list
-  };
+  const inputStyle = "outline-none p-2 text-sm text-slate-900 border rounded-md w-44";
+  const labelStyle = "text-sm font-medium text-white-700";
 
   return (
     <>
       <div
-        className="flex items-stretch items-center space-x-2 mb-4 justify-between"
+        className="flex items-stretch items-center  justify-between"
         style={{ marginBottom: "-0.5rem" }}
       >
         <div className="flex flex-col ">
-          <label
-            htmlFor="search"
-            className="text-sm font-medium text-white-700"
-          >
+          <label htmlFor="search" className={labelStyle}>
             Search Title/Description
           </label>
           <input
@@ -83,35 +91,29 @@ export default function TaskFilter({ tasks, setTodos }) {
             placeholder="Search Task"
             value={searchText}
             onChange={handleSearchTextChange}
-            className="outline-none text-slate-900 border rounded-md p-2 text-sm sm:text-base"
+            className={inputStyle}
           />
         </div>
         <div className="flex flex-col">
-          <label
-            htmlFor="search"
-            className="text-sm font-medium text-white-700"
-          >
-            Filter Due Date from
+          <label htmlFor="search" className={labelStyle}>
+            Search Due Date from
           </label>
           <input
             type="date"
             value={startDate}
             onChange={handleStartDateChange}
-            className="outline-none p-2 text-sm sm:text-base text-slate-900 border rounded-md"
+            className={inputStyle}
           />
         </div>
         <div className="flex flex-col">
-          <label
-            htmlFor="search"
-            className="text-sm font-medium text-white-700"
-          >
-            Filter Due Date to
+          <label htmlFor="search" className={labelStyle}>
+            Search Due Date to
           </label>
           <input
             type="date"
             value={endDate}
             onChange={handleEndDateChange}
-            className="outline-none p-2 text-sm sm:text-base text-slate-900 border rounded-md"
+            className={inputStyle}
           />
         </div>
       </div>
@@ -122,16 +124,16 @@ export default function TaskFilter({ tasks, setTodos }) {
           style={{ backgroundColor: "#0FA958" }}
           className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
         >
-          Apply Filters
+          Search
         </button>
-        <button
+        {/* <button
           onClick={resetHandler}
           style={{ backgroundColor: "#0FA958" }}
           // className="w-fit px-2 sm:px-3 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
           className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
         >
-          Reset Filters
-        </button>
+          Reset 
+        </button> */}
       </div>
     </>
   );

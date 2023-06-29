@@ -8,6 +8,7 @@ import TodoInput from "./TodoInput";
 import TaskFilter from "./TaskFilter";
 import SortTodos from "./SortTodos";
 import StatusFilter from "./StatusFilter";
+
 export default function UserDashboard() {
   const { userInfo, currentUser } = useAuth();
   const [edit, setEdit] = useState(null);
@@ -18,9 +19,11 @@ export default function UserDashboard() {
   const [edittedValue, setEdittedValue] = useState("");
   const [todoList, setTodosList] = useState([]);
   const { todos, setTodos, loading, error } = useFetchTodos();
-  console.log("currentUser", currentUser);
+  const [clearAll, setClearAll] = useState(false);
+  // console.log("currentUser", currentUser);
 
   useEffect(() => {
+    console.log("first use effect todos", todos);
     if (!loading) {
       const modifiedTodos = Object.values(todos).map((task) => {
         // Set the status to "pending" if the date is less than today's date
@@ -29,25 +32,27 @@ export default function UserDashboard() {
         }
         return task;
       });
-      console.log("modifiedTodos object", modifiedTodos);
-
-      setTodos(modifiedTodos);
-
       const todoList = Object.entries(modifiedTodos).map(([key, value]) => ({
         id: key,
         ...value,
       }));
-      setTodosList(todoList);
+      setTodosList(todoList.reverse());
+      setTodos(modifiedTodos);
     }
   }, [loading]);
 
+  // Function to handle the reset functionality
+  const handleReset = () => {
+    setClearAll(true);
+  };
+
   async function handleCreateTodo() {
-    console.log("handleCreateTodo, todoS", todos); // object of to dos
     if (!title) {
       return;
     }
     const newKey =
       Object.keys(todos).length === 0 ? 1 : Math.max(...Object.keys(todos)) + 1;
+    console.log("newKey", newKey);
     let statusVal = "";
     let dateVal = date;
     let dateString = new Date();
@@ -64,7 +69,7 @@ export default function UserDashboard() {
       });
       dateString = new Date(`${dateVal}T${time}`);
     }
-    if (dateString < new Date()) {
+    if (dateString.setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
       statusVal = "pending";
     } else {
       statusVal = "in progress";
@@ -77,9 +82,14 @@ export default function UserDashboard() {
     };
     // console.log("handleCreateTodo, newTodo", newTodo);
     // console.log("handleCreateTodo, setTodos", { ...todos, [newKey]: newTodo });
-    setTodos({ ...todos, [newKey]: newTodo });
+    const modifiedTodos = { ...todos, [newKey]: newTodo };
+    const todoList = Object.entries(modifiedTodos).map(([key, value]) => ({
+      id: key,
+      ...value,
+    }));
+    setTodosList(todoList.reverse());
+    setTodos(modifiedTodos);
     const userRef = doc(db, "users", currentUser.uid);
-    console.log("userInfo", userInfo);
     await setDoc(
       userRef,
       {
@@ -95,11 +105,21 @@ export default function UserDashboard() {
   }
 
   async function handleSaveEdit() {
+    // setClearAll(false);
+
     if (!edittedValue) {
       return;
     }
     if (edittedValue.status != "completed") {
-      if (new Date(edittedValue.date) < new Date()) {
+      let dateString = new Date();
+      const time = dateString.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      dateString = new Date(`${edittedValue.date}T${time}`);
+
+      if (dateString.setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
         edittedValue.status = "pending";
       } else {
         edittedValue.status = "in progress";
@@ -123,6 +143,7 @@ export default function UserDashboard() {
   }
 
   function handleEdit(todoKey) {
+    setClearAll(false);
     return () => {
       setEdit(todoKey);
       setEdittedValue(todos[todoKey]);
@@ -131,10 +152,10 @@ export default function UserDashboard() {
 
   function handleDelete(todoKey) {
     return async () => {
+      setClearAll(false);
       const tempObj = { ...todos };
       delete tempObj[todoKey];
-
-      setTodos(tempObj);
+      // return;
       const userRef = doc(db, "users", currentUser.uid);
       await setDoc(
         userRef,
@@ -145,24 +166,34 @@ export default function UserDashboard() {
         },
         { merge: true }
       );
+      setTodos(tempObj);
+      const todoList = Object.entries(tempObj).map(([key, value]) => ({
+        id: key,
+        ...value,
+      }));
+      setTodosList(todoList.reverse());
     };
   }
+
   useEffect(() => {
     if (todos) {
+      console.log("last use effect");
       const todoList = Object.entries(todos).map(([key, value]) => ({
         id: key,
         ...value,
       }));
-      setTodosList(todoList);
+      setTodosList(todoList.reverse());
     }
   }, [todos]);
 
   return (
     <div className="w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-col flex-1 gap-3 sm:gap-5">
-          <StatusFilter setTodos={setTodos} />
-
-    <TaskFilter tasks={todos} setTodos={setTodos} />
-    <SortTodos tasks={todos} setSortedTodo={setTodosList} />
+      <StatusFilter
+        setTodos={setTodos}
+        reset={clearAll}
+        setReset={setClearAll}
+      />
+      <TaskFilter setTodos={setTodos} reset={clearAll} setReset={setClearAll} />
       <TodoInput
         title={title}
         setTitle={setTitle}
@@ -170,8 +201,23 @@ export default function UserDashboard() {
         setDate={setDate}
         description={description}
         setDescription={setDescription}
+        reset={clearAll}
+        setReset={setClearAll}
         handleCreateTodo={handleCreateTodo}
       />
+      <SortTodos
+        tasks={todos}
+        setSortedTodo={setTodosList}
+        reset={clearAll}
+        setReset={setClearAll}
+      />
+      <button
+        onClick={handleReset}
+        style={{ backgroundColor: "#0FA958" }}
+        className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
+      >
+        Reset
+      </button>
       {loading && (
         <div className="flex-1 grid place-items-center">
           <i className="fa-solid fa-spinner animate-spin text-6xl"></i>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function TodoInput(props) {
   const {
@@ -8,30 +8,48 @@ export default function TodoInput(props) {
     setDate,
     description,
     setDescription,
+    reset,
+    setReset,
     handleCreateTodo,
   } = props;
 
+  useEffect(() => {
+    if (reset) {
+      setTitle("");
+      setDate("");
+      setDescription("");
+    }
+  }, [reset]);
   return (
     <div className="flex items-stretch items-center space-x-2 mb-4 justify-between">
       <input
         type="text"
         placeholder="Enter Title"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => {
+          setTitle(e.target.value);
+          setReset(false);
+        }}
         className="outline-none p-3 text-base sm:text-lg text-slate-900 flex-1 border rounded-md mr-2 w-1/2"
       />
       <input
         type="text"
         placeholder="Enter Description"
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={(e) => {
+          setDescription(e.target.value);
+          setReset(false);
+        }}
         className="outline-none p-3 text-base sm:text-lg text-slate-900 flex-1 border rounded-md mr-2 w-1/2"
       />
       <input
         type="date"
         placeholder="Enter Date"
         value={date}
-        onChange={(e) => setDate(e.target.value)}
+        onChange={(e) => {
+          setDate(e.target.value);
+          setReset(false);
+        }}
         className="outline-none p-3 text-base sm:text-lg text-slate-900 flex-1 border rounded-md mr-2"
       />
       <button

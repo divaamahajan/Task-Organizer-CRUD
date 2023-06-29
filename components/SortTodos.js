@@ -1,10 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import useFetchTodos from "../hooks/fetchTodos";
 
-function SortTodos({ tasks, setSortedTodo }) {
+function SortTodos({ reset, setReset, tasks, setSortedTodo }) {
   const [sortBy, setSortBy] = useState("");
+  const { todos } = useFetchTodos();
+
+  useEffect(() => {
+    if (reset) {
+      setSortBy("");
+      if (todos) {
+        const todoList = Object.entries(todos).map(([key, value]) => ({
+          id: key,
+          ...value,
+        }));
+        setSortedTodo(todoList.reverse());
+      }
+    }
+  }, [reset]);
 
   function sortByTitle() {
-    console.log("tasks title in sort", tasks);
     const todosArray = Object.entries(tasks).map(([key, value]) => ({
       id: key,
       ...value,
@@ -13,11 +27,9 @@ function SortTodos({ tasks, setSortedTodo }) {
       a.title.localeCompare(b.title)
     );
     setSortedTodo(sortedTodos);
-    console.log("sortedTodos", sortedTodos);
   }
 
   function sortByDescription() {
-    console.log("tasks description in sort", tasks);
     const todosArray = Object.entries(tasks).map(([key, value]) => ({
       id: key,
       ...value,
@@ -26,11 +38,9 @@ function SortTodos({ tasks, setSortedTodo }) {
       a.description.localeCompare(b.description)
     );
     setSortedTodo(sortedTodos);
-    console.log("sortedTodos", sortedTodos);
   }
 
   function sortByDate() {
-    console.log("tasks date in sort", tasks);
     const todosArray = Object.entries(tasks).map(([key, value]) => ({
       id: key,
       ...value,
@@ -39,11 +49,9 @@ function SortTodos({ tasks, setSortedTodo }) {
       (a, b) => new Date(a.date) - new Date(b.date)
     );
     setSortedTodo(sortedTodos);
-    console.log("sortedTodos", sortedTodos);
   }
 
   function sortByStatus() {
-    console.log("tasks date in sort", tasks);
     const todosArray = Object.entries(tasks).map(([key, value]) => ({
       id: key,
       ...value,
@@ -52,28 +60,22 @@ function SortTodos({ tasks, setSortedTodo }) {
       a.status.localeCompare(b.status)
     );
     setSortedTodo(sortedTodos);
-    console.log("sortedTodos", sortedTodos);
   }
 
   const handleSortChange = (event) => {
     const selectedSort = event.target.value;
+    setReset(false);
     setSortBy(selectedSort);
-    console.log("selected Sort", selectedSort);
-
     if (selectedSort === "title") {
-      console.log("title selected", selectedSort);
       sortByTitle();
     }
     if (selectedSort === "description") {
-      console.log("description selected", selectedSort);
       sortByDescription();
     }
     if (selectedSort === "dueDate") {
-      console.log("due date selected", selectedSort);
       sortByDate();
     }
     if (selectedSort === "status") {
-      console.log("status selected", selectedSort);
       sortByStatus();
     }
   };
