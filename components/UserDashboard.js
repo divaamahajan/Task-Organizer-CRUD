@@ -7,7 +7,7 @@ import useFetchTodos from "../hooks/fetchTodos";
 import TodoInput from "./TodoInput";
 import TaskFilter from "./TaskFilter";
 import SortTodos from "./SortTodos";
-
+import StatusFilter from "./StatusFilter";
 export default function UserDashboard() {
   const { userInfo, currentUser } = useAuth();
   const [edit, setEdit] = useState(null);
@@ -159,6 +159,10 @@ export default function UserDashboard() {
 
   return (
     <div className="w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-col flex-1 gap-3 sm:gap-5">
+          <StatusFilter setTodos={setTodos} />
+
+    <TaskFilter tasks={todos} setTodos={setTodos} />
+    <SortTodos tasks={todos} setSortedTodo={setTodosList} />
       <TodoInput
         title={title}
         setTitle={setTitle}
@@ -168,8 +172,6 @@ export default function UserDashboard() {
         setDescription={setDescription}
         handleCreateTodo={handleCreateTodo}
       />
-      <TaskFilter tasks={todos} setTodos={setTodos} />
-      <SortTodos tasks={todos} setSortedTodo={setTodosList} />
       {loading && (
         <div className="flex-1 grid place-items-center">
           <i className="fa-solid fa-spinner animate-spin text-6xl"></i>

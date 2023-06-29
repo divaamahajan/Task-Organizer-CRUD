@@ -7,43 +7,6 @@ export default function TaskFilter({ tasks, setTodos }) {
   const [endDate, setEndDate] = useState("");
   const { todos } = useFetchTodos();
 
-  // const statusCount = {};
-  // Object.values(todos).forEach((task) => {
-  //   if (statusCount[task.status]) {
-  //     statusCount[task.status] += 1;
-  //   } else {
-  //     statusCount[task.status] = 1;
-  //   }
-  // });
-
-  const statusCount = todos
-    ? Object.values(todos).reduce((count, task) => {
-        count[task.status] = (count[task.status] || 0) + 1;
-        return count;
-      }, {})
-    : {};
-
-  const getStatusColor = (status) => {
-    if (status == "pending") return "#E2B93BCC";
-    else if (status == "in progress") return "#2F80ED";
-    else if (status == "completed") return "#0FA958";
-  };
-
-  const handleStatusFilter = (status) => {
-    if (!status) {
-      setTodos(todos);
-      return;
-    }
-    let filteredTodos = { ...todos };
-
-    filteredTodos = Object.fromEntries(
-      Object.entries(filteredTodos).filter(
-        ([key, value]) => value.status === status
-      )
-    );
-    setTodos(filteredTodos);
-  };
-
   const handleSearchTextChange = (e) => {
     setSearchText(e.target.value);
   };
@@ -105,25 +68,25 @@ export default function TaskFilter({ tasks, setTodos }) {
   return (
     <>
       <div
-        className="flex  items-stretch items-center space-x-2 mb-4 justify-between"
+        className="flex items-stretch items-center space-x-2 mb-4 justify-between"
         style={{ marginBottom: "-0.5rem" }}
       >
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col ">
           <label
             htmlFor="search"
             className="text-sm font-medium text-white-700"
           >
-            Filter Title/Description
+            Search Title/Description
           </label>
           <input
             type="text"
             placeholder="Search Task"
             value={searchText}
             onChange={handleSearchTextChange}
-            className="outline-none text-slate-900 border rounded-md p-2 text-sm sm:text-base   mr-2"
+            className="outline-none text-slate-900 border rounded-md p-2 text-sm sm:text-base"
           />
         </div>
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col">
           <label
             htmlFor="search"
             className="text-sm font-medium text-white-700"
@@ -134,10 +97,10 @@ export default function TaskFilter({ tasks, setTodos }) {
             type="date"
             value={startDate}
             onChange={handleStartDateChange}
-            className="outline-none p-2 text-sm sm:text-base text-slate-900  border rounded-md mr-2"
+            className="outline-none p-2 text-sm sm:text-base text-slate-900 border rounded-md"
           />
         </div>
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col">
           <label
             htmlFor="search"
             className="text-sm font-medium text-white-700"
@@ -148,10 +111,11 @@ export default function TaskFilter({ tasks, setTodos }) {
             type="date"
             value={endDate}
             onChange={handleEndDateChange}
-            className="outline-none p-2 text-sm sm:text-base text-slate-900 border rounded-md mr-2"
+            className="outline-none p-2 text-sm sm:text-base text-slate-900 border rounded-md"
           />
         </div>
       </div>
+
       <div className="flex items-stretch items-center space-x-2 mb-4 justify-between">
         <button
           onClick={filterTasks}
@@ -167,47 +131,6 @@ export default function TaskFilter({ tasks, setTodos }) {
           className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
         >
           Reset Filters
-        </button>
-      </div>
-      <div
-        className="flex  items-stretch items-center space-x-2 mb-4 justify-between"
-        style={{ marginBottom: "-0.5rem" }}
-      >
-        <button
-          onClick={() => handleStatusFilter("pending")}
-          style={{ backgroundColor: getStatusColor("pending") }}
-          // className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
-          className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
-        >
-          Pending
-          <br />{" "}
-          <span style={{ fontSize: "0.8em" }}>
-            {statusCount["pending"]} tasks
-          </span>
-        </button>
-        <button
-          onClick={() => handleStatusFilter("in progress")}
-          style={{ backgroundColor: getStatusColor("in progress") }}
-          // className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
-          className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
-        >
-          In Progress
-          <br />{" "}
-          <span style={{ fontSize: "0.8em" }}>
-            {statusCount["in progress"]} tasks
-          </span>
-        </button>
-        <button
-          onClick={() => handleStatusFilter("completed")}
-          style={{ backgroundColor: getStatusColor("completed") }}
-          className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
-          // className="w-fit text-white font-medium px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
-        >
-          Completed
-          <br />{" "}
-          <span style={{ fontSize: "0.8em" }}>
-            {statusCount["completed"]} tasks
-          </span>
         </button>
       </div>
     </>

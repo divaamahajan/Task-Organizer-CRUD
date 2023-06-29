@@ -9,6 +9,23 @@ export default function Header() {
   if (currentUser && currentUser.displayName) {
     user = currentUser.displayName;
   }
+  function getGreeting() {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+
+    let greeting = "";
+
+    if (currentHour < 12) {
+      greeting = "Good Morning";
+    } else if (currentHour < 18) {
+      greeting = "Good Afternoon";
+    } else {
+      greeting = "Good Evening";
+    }
+
+    return greeting;
+  }
+
   return (
     <>
       {openModal && <Modal setOpenModal={setOpenModal} />}
@@ -31,7 +48,7 @@ export default function Header() {
         ></i>
       </div>
       <h1 className="text-1xl select-none sm:text-2xl items-center">
-        Welcome {user}!
+        {getGreeting()} {user}!
       </h1>
     </>
   );
