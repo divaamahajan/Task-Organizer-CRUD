@@ -22,7 +22,12 @@ export default function TaskFilter({ tasks, setTodos }) {
         return count;
       }, {})
     : {};
-  console.log("statusCount", statusCount);
+
+  const getStatusColor = (status) => {
+    if (status == "pending") return "#E2B93BCC";
+    else if (status == "in progress") return "#2F80ED";
+    else if (status == "completed") return "#0FA958";
+  };
 
   const handleStatusFilter = (status) => {
     if (!status) {
@@ -170,7 +175,7 @@ export default function TaskFilter({ tasks, setTodos }) {
       >
         <button
           onClick={() => handleStatusFilter("pending")}
-          style={{ backgroundColor: "#E2B93BCC" }}
+          style={{ backgroundColor: getStatusColor("pending") }}
           // className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
           className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
         >
@@ -182,7 +187,7 @@ export default function TaskFilter({ tasks, setTodos }) {
         </button>
         <button
           onClick={() => handleStatusFilter("in progress")}
-          style={{ backgroundColor: "#2F80ED" }}
+          style={{ backgroundColor: getStatusColor("in progress") }}
           // className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
           className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
         >
@@ -194,7 +199,7 @@ export default function TaskFilter({ tasks, setTodos }) {
         </button>
         <button
           onClick={() => handleStatusFilter("completed")}
-          style={{ backgroundColor: "#0FA958" }}
+          style={{ backgroundColor: getStatusColor("completed") }}
           className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
           // className="w-fit text-white font-medium px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
         >

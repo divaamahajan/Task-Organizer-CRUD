@@ -13,6 +13,11 @@ export default function TodoCard(props) {
     handleDelete,
   } = props;
   const { id, title, date, description, status } = todoKey;
+  const getStatusColor = (status) => {
+    if (status == "pending") return "#E2B93BCC";
+    else if (status == "in progress") return "#2F80ED";
+    else if (status == "completed") return "#0FA958";
+  };
   const handleStatusChange = (e) => {
     const isChecked = e.target.checked;
     if (isChecked) {
@@ -46,7 +51,13 @@ export default function TodoCard(props) {
             </p>
             <div>
               <div style={{ textAlign: "center", padding: "0 20px" }}>
-                <p>
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <strong
                     style={{
                       fontSize: "1.2rem",
@@ -57,12 +68,20 @@ export default function TodoCard(props) {
                     }}
                   >
                     {title}
-                  </strong>
+                  </strong>{" "}
+                  <span
+                    style={{
+                      backgroundColor: getStatusColor(status),
+                      padding: "2px 6px",
+                      borderRadius: "4px",
+                      marginLeft: "20px",
+                      minWidth: "80px",
+                      display: "inline-block",
+                    }}
+                  >
+                    {status}
+                  </span>
                 </p>
-                <p style={{ fontStyle: "italic" }}>({status})</p>
-                {/* {status === "in progress" && (
-                    <p style={{ fontStyle: "italic" }}>({status})</p>
-                  )} */}
               </div>
               <div style={{ textAlign: "justify", padding: "0 20px" }}>
                 <p>{description}</p>
