@@ -8,7 +8,7 @@ export default function TodoInput(props) {
     setDate,
     description,
     setDescription,
-    handleAddTodo,
+    handleCreateTodo,
   } = props;
 
   return (
@@ -35,7 +35,7 @@ export default function TodoInput(props) {
         className="outline-none p-3 text-base sm:text-lg text-slate-900 flex-1 border rounded-md mr-2"
       />
       <button
-        onClick={handleAddTodo}
+        onClick={handleCreateTodo}
         style={{ backgroundColor: "#0FA958" }}
         // className="w-fit px-4 sm:px-6 py-2 sm:py-3 bg-amber-400 text-white font-medium text-base duration-300 hover:opacity-40 rounded-md"
         className="w-fit px-4 sm:px-6 py-2 sm:py-3  text-white font-medium text-base duration-300 hover:opacity-40 rounded-md"

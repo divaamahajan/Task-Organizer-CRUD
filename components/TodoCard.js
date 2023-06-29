@@ -5,11 +5,11 @@ export default function TodoCard(props) {
     children,
     edit,
     setEdit,
-    handleAddEdit,
+    handleEdit,
     edittedValue,
     setEdittedValue,
     todoKey,
-    handleEditTodo,
+    handleSaveEdit,
     handleDelete,
   } = props;
   const { id, title, date, description, status } = todoKey;
@@ -141,7 +141,7 @@ export default function TodoCard(props) {
         {edit === id ? (
           <>
             <i
-              onClick={handleEditTodo}
+              onClick={handleSaveEdit}
               className="fa-solid fa-check px-2 duration-300 hover:scale-125 cursor-pointer"
             ></i>
             <i
@@ -152,7 +152,7 @@ export default function TodoCard(props) {
         ) : (
           <>
             <i
-              onClick={handleAddEdit(id)}
+              onClick={handleEdit(id)}
               className="fa-solid fa-pencil px-2 duration-300 hover:rotate-45 cursor-pointer"
             ></i>
             <i

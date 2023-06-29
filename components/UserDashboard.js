@@ -11,7 +11,7 @@ import SortTodos from "./SortTodos";
 export default function UserDashboard() {
   const { userInfo, currentUser } = useAuth();
   const [edit, setEdit] = useState(null);
-  const [todo, setTodo] = useState("");
+  // const [todo, setTodo] = useState("");
   const [description, setDescription] = useState("");
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
@@ -31,35 +31,52 @@ export default function UserDashboard() {
       });
       console.log("modifiedTodos object", modifiedTodos);
 
-      setTodo(modifiedTodos);
+      setTodos(modifiedTodos);
 
       const todoList = Object.entries(modifiedTodos).map(([key, value]) => ({
         id: key,
         ...value,
       }));
-      console.log("todoList inside loading", todoList);
       setTodosList(todoList);
     }
   }, [loading]);
 
-  async function handleAddTodo() {
-    if (!todo) {
+  async function handleCreateTodo() {
+    console.log("handleCreateTodo, todoS", todos); // object of to dos
+    if (!title) {
       return;
     }
     const newKey =
       Object.keys(todos).length === 0 ? 1 : Math.max(...Object.keys(todos)) + 1;
     let statusVal = "";
-    if (new Date(date) < new Date()) {
+    let dateVal = date;
+    let dateString = new Date();
+    if (!dateVal) {
+      const year = dateString.getFullYear();
+      const month = String(dateString.getMonth() + 1).padStart(2, "0");
+      const day = String(dateString.getDate()).padStart(2, "0");
+      dateVal = `${year}-${month}-${day}`;
+    } else {
+      const time = dateString.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+      dateString = new Date(`${dateVal}T${time}`);
+    }
+    if (dateString < new Date()) {
       statusVal = "pending";
     } else {
       statusVal = "in progress";
     }
     const newTodo = {
-      title: todo,
-      date: date,
+      title: title,
       description: description,
+      date: dateVal,
       status: statusVal,
     };
+    // console.log("handleCreateTodo, newTodo", newTodo);
+    // console.log("handleCreateTodo, setTodos", { ...todos, [newKey]: newTodo });
     setTodos({ ...todos, [newKey]: newTodo });
     const userRef = doc(db, "users", currentUser.uid);
     console.log("userInfo", userInfo);
@@ -77,7 +94,7 @@ export default function UserDashboard() {
     setDate("");
   }
 
-  async function handleEditTodo() {
+  async function handleSaveEdit() {
     if (!edittedValue) {
       return;
     }
@@ -92,9 +109,6 @@ export default function UserDashboard() {
     const newKey = edit;
     setTodos({ ...todos, [newKey]: edittedValue });
     const userRef = doc(db, "users", currentUser.uid);
-
-    console.log("userInfo", userInfo);
-    console.log("currentUser", currentUser);
     await setDoc(
       userRef,
       {
@@ -108,9 +122,8 @@ export default function UserDashboard() {
     setEdittedValue("");
   }
 
-  function handleAddEdit(todoKey) {
+  function handleEdit(todoKey) {
     return () => {
-      console.log("todos[todoKey]", todos[todoKey]);
       setEdit(todoKey);
       setEdittedValue(todos[todoKey]);
     };
@@ -135,7 +148,6 @@ export default function UserDashboard() {
     };
   }
   useEffect(() => {
-    console.log("todos updated")
     if (todos) {
       const todoList = Object.entries(todos).map(([key, value]) => ({
         id: key,
@@ -144,8 +156,6 @@ export default function UserDashboard() {
       setTodosList(todoList);
     }
   }, [todos]);
-  
-  console.log("todoList", todoList);
 
   return (
     <div className="w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-col flex-1 gap-3 sm:gap-5">
@@ -156,7 +166,7 @@ export default function UserDashboard() {
         setDate={setDate}
         description={description}
         setDescription={setDescription}
-        handleAddTodo={handleAddTodo}
+        handleCreateTodo={handleCreateTodo}
       />
       <TaskFilter tasks={todos} setTodos={setTodos} />
       <SortTodos tasks={todos} setSortedTodo={setTodosList} />
@@ -169,9 +179,9 @@ export default function UserDashboard() {
         <>
           {todoList.map((todo, i) => (
             <TodoCard
-              handleEditTodo={handleEditTodo}
+              handleSaveEdit={handleSaveEdit}
               key={i}
-              handleAddEdit={handleAddEdit}
+              handleEdit={handleEdit}
               edit={edit}
               setEdit={setEdit}
               todoKey={todo}
