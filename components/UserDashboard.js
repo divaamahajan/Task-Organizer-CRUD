@@ -16,7 +16,6 @@ export default function UserDashboard() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [edittedValue, setEdittedValue] = useState("");
-  const [todosArray, setTodosArray] = useState([]);
   const [todoList, setTodosList] = useState([]);
   const { todos, setTodos, loading, error } = useFetchTodos();
   console.log("currentUser", currentUser);
