@@ -7,6 +7,23 @@ export default function TaskFilter({ tasks, setTodos }) {
   const [endDate, setEndDate] = useState("");
   const { todos } = useFetchTodos();
 
+  // const statusCount = {};
+  // Object.values(todos).forEach((task) => {
+  //   if (statusCount[task.status]) {
+  //     statusCount[task.status] += 1;
+  //   } else {
+  //     statusCount[task.status] = 1;
+  //   }
+  // });
+
+  const statusCount = todos
+    ? Object.values(todos).reduce((count, task) => {
+        count[task.status] = (count[task.status] || 0) + 1;
+        return count;
+      }, {})
+    : {};
+  console.log("statusCount", statusCount);
+
   const handleStatusFilter = (status) => {
     if (!status) {
       setTodos(todos);
@@ -82,7 +99,10 @@ export default function TaskFilter({ tasks, setTodos }) {
 
   return (
     <>
-      <div className="flex  items-stretch items-center space-x-2 mb-4 justify-between" style={{ marginBottom: '-0.5rem' }}>
+      <div
+        className="flex  items-stretch items-center space-x-2 mb-4 justify-between"
+        style={{ marginBottom: "-0.5rem" }}
+      >
         <div className="flex flex-col space-y-2">
           <label
             htmlFor="search"
@@ -144,30 +164,45 @@ export default function TaskFilter({ tasks, setTodos }) {
           Reset Filters
         </button>
       </div>
-      <div className="flex  items-stretch items-center space-x-2 mb-4 justify-between" style={{ marginBottom: '-0.5rem' }}>
-        <button
-          onClick={() => handleStatusFilter("completed")}
-          style={{ backgroundColor: "#0FA958" }}
-          className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
-          // className="w-fit text-white font-medium px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
-        >
-          Completed
-        </button>
+      <div
+        className="flex  items-stretch items-center space-x-2 mb-4 justify-between"
+        style={{ marginBottom: "-0.5rem" }}
+      >
         <button
           onClick={() => handleStatusFilter("pending")}
-          style={{ backgroundColor: "#0FA958" }}
-          className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
-          // className="w-fit px-2 sm:px-3 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
+          style={{ backgroundColor: "#E2B93BCC" }}
+          // className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
+          className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
         >
           Pending
+          <br />{" "}
+          <span style={{ fontSize: "0.8em" }}>
+            {statusCount["pending"]} tasks
+          </span>
         </button>
         <button
           onClick={() => handleStatusFilter("in progress")}
-          style={{ backgroundColor: "#0FA958" }}
-          className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
-          // className="w-fit px-2 sm:px-3 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
+          style={{ backgroundColor: "#2F80ED" }}
+          // className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
+          className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
         >
           In Progress
+          <br />{" "}
+          <span style={{ fontSize: "0.8em" }}>
+            {statusCount["in progress"]} tasks
+          </span>
+        </button>
+        <button
+          onClick={() => handleStatusFilter("completed")}
+          style={{ backgroundColor: "#0FA958" }}
+          className="w-fit px-2 sm:px-10 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
+          // className="w-fit text-white font-medium px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
+        >
+          Completed
+          <br />{" "}
+          <span style={{ fontSize: "0.8em" }}>
+            {statusCount["completed"]} tasks
+          </span>
         </button>
       </div>
     </>
