@@ -58,7 +58,7 @@ export default function TodoInput(props) {
         // className="w-fit px-4 sm:px-6 py-2 sm:py-3 bg-amber-400 text-white font-medium text-base duration-300 hover:opacity-40 rounded-md"
         className="w-fit px-4 sm:px-6 py-2 sm:py-3  text-white font-medium text-base duration-300 hover:opacity-40 rounded-md"
       >
-        Create Task
+        Create
       </button>
     </div>
   );

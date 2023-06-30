@@ -9,25 +9,25 @@ export default function TaskFilter({ reset, setReset, setTodos }) {
 
   useEffect(() => {
     if (reset) {
-      setSearchText("")
-      setEndDate("")
-      setStartDate("")
+      setSearchText("");
+      setEndDate("");
+      setStartDate("");
       // setTodos(todos);
     }
   }, [reset]);
   const handleSearchTextChange = (e) => {
     setSearchText(e.target.value);
-    setReset(false)
+    setReset(false);
   };
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
-    setReset(false)
+    setReset(false);
   };
 
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
-    setReset(false)
+    setReset(false);
   };
 
   const filterTasks = () => {
@@ -70,30 +70,32 @@ export default function TaskFilter({ reset, setReset, setTodos }) {
     }
 
     setTodos(filteredTodos);
-    setReset(false)
+    setReset(false);
   };
 
-  const inputStyle = "outline-none p-2 text-sm text-slate-900 border rounded-md w-44";
+  const inputStyle =
+    "outline-none p-2 text-sm text-slate-900 border rounded-md ";
   const labelStyle = "text-sm font-medium text-white-700";
+  
 
   return (
-    <>
+    <div className="border rounded-md p-3 border-slate-500 ">
+      <div className="flex flex-col ">
+        <label htmlFor="search" className={labelStyle}>
+          Search Title/Description
+        </label>
+        <input
+          type="text"
+          placeholder="Search Task"
+          value={searchText}
+          onChange={handleSearchTextChange}
+          className={inputStyle}
+        />
+      </div>
       <div
-        className="flex items-stretch items-center  justify-between"
-        style={{ marginBottom: "-0.5rem" }}
+        className="flex items-stretch items-center justify-between"
+        // style={{ marginTop: "-0.7rem" }}
       >
-        <div className="flex flex-col ">
-          <label htmlFor="search" className={labelStyle}>
-            Search Title/Description
-          </label>
-          <input
-            type="text"
-            placeholder="Search Task"
-            value={searchText}
-            onChange={handleSearchTextChange}
-            className={inputStyle}
-          />
-        </div>
         <div className="flex flex-col">
           <label htmlFor="search" className={labelStyle}>
             Search Due Date from
@@ -116,25 +118,21 @@ export default function TaskFilter({ reset, setReset, setTodos }) {
             className={inputStyle}
           />
         </div>
+        <div className="flex flex-col">
+          <label htmlFor="search" className="text-transparent">
+            Search
+          </label>
+          <button
+            onClick={filterTasks}
+            // className="outline-none p-3 text-base sm:text-lg text-slate-900 flex-1 border rounded-md mr-2"
+            // className="outline-none p-3 flex-1 border  mr-2"
+            style={{ backgroundColor: "#0FA958" }}
+            className="text-white duration-300 flex-1 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
+          >
+            Search
+          </button>
+        </div>
       </div>
-
-      <div className="flex items-stretch items-center space-x-2 mb-4 justify-between">
-        <button
-          onClick={filterTasks}
-          style={{ backgroundColor: "#0FA958" }}
-          className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
-        >
-          Search
-        </button>
-        {/* <button
-          onClick={resetHandler}
-          style={{ backgroundColor: "#0FA958" }}
-          // className="w-fit px-2 sm:px-3 py-1 sm:py-2 text-white font-medium text-sm sm:text-base duration-300 hover:opacity-40 rounded-md"
-          className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
-        >
-          Reset 
-        </button> */}
-      </div>
-    </>
+    </div>
   );
 }

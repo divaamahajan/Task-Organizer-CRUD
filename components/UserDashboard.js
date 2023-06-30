@@ -16,10 +16,13 @@ export default function UserDashboard() {
   const [description, setDescription] = useState("");
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
+  const [taskCreatedMsg, setTaskCreatedMsg] = useState("");
   const [edittedValue, setEdittedValue] = useState("");
   const [todoList, setTodosList] = useState([]);
   const { todos, setTodos, loading, error } = useFetchTodos();
   const [clearAll, setClearAll] = useState(false);
+  const [showCreatePopup, setShowCreatePopup] = useState(false);
+
   // console.log("currentUser", currentUser);
 
   useEffect(() => {
@@ -40,6 +43,15 @@ export default function UserDashboard() {
       setTodos(modifiedTodos);
     }
   }, [loading]);
+
+  const handleCreateButton = () => {
+    setShowCreatePopup(true);
+  };
+
+  const handleCancelButton = () => {
+    setTaskCreatedMsg("");
+    setShowCreatePopup(false);
+  };
 
   // Function to handle the reset functionality
   const handleReset = () => {
@@ -99,6 +111,7 @@ export default function UserDashboard() {
       },
       { merge: true }
     );
+    setTaskCreatedMsg("Task Created");
     setTitle("");
     setDescription("");
     setDate("");
@@ -188,36 +201,84 @@ export default function UserDashboard() {
 
   return (
     <div className="w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-col flex-1 gap-3 sm:gap-5">
+      {showCreatePopup && (
+        <div className="popup" style={{ paddingBottom: "1rem" }}>
+          <div className="flex justify-end">
+            <i
+              onClick={handleCancelButton}
+              className="fa-solid fa-circle-xmark px-2 duration-300 hover:scale-125 cursor-pointer"
+              style={{
+                color: "#092C4C",
+                fontSize: "1.2rem",
+              }}
+            ></i>
+          </div>
+          <div className="mt-4">
+            <TodoInput
+              title={title}
+              setTitle={setTitle}
+              date={date}
+              setDate={setDate}
+              description={description}
+              setDescription={setDescription}
+              reset={clearAll}
+              setReset={setClearAll}
+              handleCreateTodo={handleCreateTodo}
+            />
+          </div>
+
+          {taskCreatedMsg !== "" && (
+            <i
+              className="fa-solid fa-check px-1 duration-300 hover:scale-125 cursor-pointer"
+              style={{
+                color: "#0FA958",
+                fontSize: "0.7rem",
+                letterSpacing: "0.25em",
+              }}
+            >
+              {taskCreatedMsg}
+            </i>
+          )}
+        </div>
+      )}
       <StatusFilter
         setTodos={setTodos}
         reset={clearAll}
         setReset={setClearAll}
       />
       <TaskFilter setTodos={setTodos} reset={clearAll} setReset={setClearAll} />
-      <TodoInput
-        title={title}
-        setTitle={setTitle}
-        date={date}
-        setDate={setDate}
-        description={description}
-        setDescription={setDescription}
-        reset={clearAll}
-        setReset={setClearAll}
-        handleCreateTodo={handleCreateTodo}
-      />
-      <SortTodos
-        tasks={todos}
-        setSortedTodo={setTodosList}
-        reset={clearAll}
-        setReset={setClearAll}
-      />
-      <button
-        onClick={handleReset}
-        style={{ backgroundColor: "#0FA958" }}
-        className="text-white duration-300 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
+
+      <div
+        className="flex items-stretch items-center justify-between"
+        style={{ marginBottom: "-1rem" }}
       >
-        Reset
-      </button>
+        <SortTodos
+          tasks={todos}
+          setSortedTodo={setTodosList}
+          reset={clearAll}
+          setReset={setClearAll}
+        />
+        <div className="flex flex-col">
+          <label className="text-transparent">create</label>
+          <button
+            onClick={handleCreateButton}
+            style={{ backgroundColor: "#0FA958" }}
+            className="outline-none text-white duration-300 flex-1 hover:opacity-40 rounded-md text-sm w-fit px-2 sm:px-3 font-medium  sm:text-base "
+          >
+            Create Task
+          </button>
+        </div>
+        <div className="flex flex-col">
+          <label className="text-transparent">Reset</label>
+          <button
+            onClick={handleReset}
+            style={{ backgroundColor: "#0FA958" }}
+            className="text-white duration-300 flex-1 hover:opacity-40 rounded-md w-fit px-2 sm:px-3 font-medium text-sm sm:text-base "
+          >
+            Reset
+          </button>
+        </div>
+      </div>
       {loading && (
         <div className="flex-1 grid place-items-center">
           <i className="fa-solid fa-spinner animate-spin text-6xl"></i>

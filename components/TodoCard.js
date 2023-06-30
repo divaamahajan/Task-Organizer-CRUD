@@ -40,7 +40,7 @@ export default function TodoCard(props) {
             <p
               className="flex items-center"
               style={{
-                fontSize: "1.2rem",
+                fontSize: "1.05rem",
                 textDecoration:
                   status === "completed" ? "line-through" : "none",
                 textDecorationThickness: "2px",
@@ -60,7 +60,7 @@ export default function TodoCard(props) {
                 >
                   <strong
                     style={{
-                      fontSize: "1.2rem",
+                      fontSize: "1.05rem",
                       textDecoration:
                         status === "completed" ? "line-through" : "none",
                       textDecorationThickness: "2px",
@@ -118,7 +118,7 @@ export default function TodoCard(props) {
                   value={edittedValue.title}
                   style={{
                     fontWeight: "bold",
-                    fontSize: "1.2rem",
+                    fontSize: "1.05rem",
                     paddingBottom: "5px",
                     alignItems: "center",
                     whiteSpace: "pre-wrap",

@@ -81,13 +81,16 @@ function SortTodos({ reset, setReset, tasks, setSortedTodo }) {
   };
 
   return (
-    <div>
-      <label htmlFor="sort">Sort By:</label>
+    <div className="flex flex-col">
+      <label htmlFor="sort" className="text-sm font-medium text-white-700">
+        Sort By:
+      </label>
       <select
+        className="outline-none p-2 text-sm text-slate-900 border rounded-md "
         id="sort"
         value={sortBy}
         onChange={handleSortChange}
-        className=" p-1 text-base sm:text-lg text-slate-900 flex-1 mr-2"
+        // className=" p-1 text-base sm:text-lg text-slate-900 flex-1 mr-2"
       >
         <option value="">Select...</option>
         <option value="title">Title</option>
